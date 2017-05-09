@@ -1,0 +1,293 @@
+Parsing...
+sample1.mo
+
+======= MOOL Program =======
+
+class Main{
+  Void main(){
+    Int t1;
+    Int t2;
+    Return;
+  }
+
+} 
+
+class A{
+   Int t1;
+   Int t2;
+   Bool b1;
+
+  Void method1(){
+    Int a;
+    Return;
+  }
+
+
+  Int test_method1(Int c){
+    Bool b;
+    If(true)
+    {
+      Return t1;
+    }
+    else
+    {
+      c=t2;
+    }
+    While([c,[4,t1](+)](>))
+    {
+      c=[c,1](+);
+    }
+    Return t1;
+  }
+
+}
+class B extends A {
+   Int s1;
+   Int s2;
+
+  Void method1(){
+    Int b;
+    Return;
+  }
+
+
+  Void method1(Int a){
+    Int b;
+    A t;
+    t=new A();
+    [t.method1()];
+    If([b,0](>))
+    {
+      [t.test_method1(b)];
+    }
+    else
+    {
+      [method1()];
+    }
+    t=new B();
+    [(B)t.method1()];
+    [method1(3)];
+    b=[[a,1](+),[s1,s2](*)](-);
+    Return;
+  }
+
+
+  Int method2(){
+    Int a;
+    a=super.t1;
+    Return a;
+  }
+
+}
+
+======= End of MOOL Program =======
+
+
+Static Checking...
+
+======= MOOL Program =======
+
+class Main{
+  Void main(){
+    Int t1;
+    Int t2;
+    Return;
+  }
+
+} 
+
+class A{
+   Int t1;
+   Int t2;
+   Bool b1;
+
+  Void method1(){
+    Int a;
+    Return;
+  }
+
+
+  Int test_method1(Int c){
+    Bool b;
+    If(true:Bool)
+    {
+      Return (t1:Int,1):Int;
+    }
+    else
+    {
+      (c:Int,2)=(t2:Int,1):Int;
+    }
+    While([(c:Int,2):Int,[4:Int,(t1:Int,1):Int](+):Int](>):Bool)
+    {
+      (c:Int,2)=[(c:Int,2):Int,1:Int](+):Int;
+    }
+    Return (t1:Int,1):Int;
+  }
+
+}
+class B extends A {
+   Int s1;
+   Int s2;
+
+  Void method1(){
+    Int b;
+    Return;
+  }
+
+
+  Void method1(Int a){
+    Int b;
+    A t;
+    (t:A,2)=new A():A;
+    [(t:A,2):A.method1()]:Void;
+    If([(b:Int,2):Int,0:Int](>):Bool)
+    {
+      [(t:A,2):A.test_method1((b:Int,2):Int)]:Int;
+    }
+    else
+    {
+      [method1()]:Void;
+    }
+    (t:A,2)=new B():B;
+    [(B)(t:A,2):A:B.method1()]:Void;
+    [method1(3:Int)]:Void;
+    (b:Int,2)=[[(a:Int,2):Int,1:Int](+):Int,[(s1:Int,1):Int,(s2:Int,1):Int](*):Int](-):Int;
+    Return;
+  }
+
+
+  Int method2(){
+    Int a;
+    (a:Int,2)=super:A.t1:Int;
+    Return (a:Int,2):Int;
+  }
+
+}
+
+======= End of MOOL Program =======
+
+
+IR3 Code Generation...
+======= IR3 Program =======
+
+======= Class3 ======= 
+
+class3 Main{
+parent:None;
+
+----meth table----
+  (main,main)}
+
+class3 B{
+parent:A;
+  Int t1;
+  Int t2;
+  Bool b1;
+  Int s1;
+  Int s2;
+
+----meth table----
+  (method1,_B_0);
+  (test_method1~Int,_A_1);
+  (method1~Int,_B_1);
+  (method2,_B_2);
+}
+
+class3 A{
+parent:None;
+  Int t1;
+  Int t2;
+  Bool b1;
+
+----meth table----
+  (method1,_A_0);
+  (test_method1~Int,_A_1);
+}
+
+=======  CMtd3 ======= 
+
+void main(Main this){
+  Int t1;
+  Int t2;
+  Return;
+}
+
+void _B_0(B this){
+  Int b;
+  Return;
+}
+
+void _B_1(B this,Int a){
+  Int b;
+  A t;
+  Bool _t7;
+  B _t8;
+  Int _t9;
+  Int _t10;
+  Int _t11;
+  Int _t12;
+  t=new A();
+  [t.method1(t)];
+  _t7=[b,0](>);
+  If([_t7,false](==)) goto 5;
+  [t.test_method1~Int(t,b)];
+  goto 6;
+ Label 5:
+  [this.method1(this)];
+ Label 6:
+  t=new B();
+  _t8=(B)t;
+  [_t8.method1(_t8)];
+  [this.method1~Int(this,3)];
+  _t9=[a,1](+);
+  _t10=this.s1;
+  _t11=this.s2;
+  _t12=[_t10,_t11](*);
+  b=[_t9,_t12](-);
+  Return;
+}
+
+Int _B_2(B this){
+  Int a;
+  A _t13;
+  _t13=this.super;
+  a=_t13.t1;
+  Return a;
+}
+
+void _A_0(A this){
+  Int a;
+  Return;
+}
+
+Int _A_1(A this,Int c){
+  Bool b;
+  Bool _t1;
+  Int _t2;
+  Int _t3;
+  Int _t4;
+  Bool _t5;
+  Int _t6;
+  _t1=true;
+  If([_t1,false](==)) goto 1;
+  _t2=this.t1;
+  Return _t2;
+  goto 2;
+ Label 1:
+  c=this.t2;
+ Label 2:
+ Label 3:
+  _t3=this.t1;
+  _t4=[4,_t3](+);
+  _t5=[c,_t4](>);
+  If((!)[_t5]) goto 4;
+  c=[c,1](+);
+  goto 3;
+ Label 4:
+  _t6=this.t1;
+  Return _t6;
+}
+
+======= End of IR3 Program =======
+
+

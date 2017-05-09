@@ -1,0 +1,167 @@
+Parsing...
+sample1.mo
+
+======= MOOL Program =======
+
+class Main{
+  Void main(){
+    Int t1;
+    Int t2;
+    Return;
+  }
+
+} 
+
+class A{
+   Int t1;
+   Int t2;
+   Bool b1;
+
+  Void method1(){
+    Int a;
+    Return;
+  }
+
+
+  Int test_method1(Int c){
+    Bool b;
+    If(true)
+    {
+      Return t1;
+    }
+    else
+    {
+      c=t2;
+    }
+    While([c,[4,t1](+)](>))
+    {
+      c=[c,1](+);
+    }
+    Return t1;
+  }
+
+}
+class B extends A {
+   Int t1;
+   Int s1;
+
+  Void method1(){
+    Int b;
+    Return;
+  }
+
+
+  Void method1(Int a){
+    Int b;
+    A t;
+    [t.method1()];
+    If([b,0](>))
+    {
+      [t.test_method1(b)];
+    }
+    else
+    {
+      [method1()];
+    }
+    t=new B();
+    [(B)t.method1()];
+    [method1(3)];
+    b=[[a,1](+),[s1,t1](*)](-);
+    Return;
+  }
+
+
+  Int method2(){
+    Int a;
+    a=super.t1;
+    Return a;
+  }
+
+}
+
+======= End of MOOL Program =======
+
+
+Static Checking...
+
+======= MOOL Program =======
+
+class Main{
+  Void main(){
+    Int t1;
+    Int t2;
+    Return;
+  }
+
+} 
+
+class A{
+   Int t1;
+   Int t2;
+   Bool b1;
+
+  Void method1(){
+    Int a;
+    Return;
+  }
+
+
+  Int test_method1(Int c){
+    Bool b;
+    If(true:Bool)
+    {
+      Return (t1:Int,1):Int;
+    }
+    else
+    {
+      (c:Int,2)=(t2:Int,1):Int;
+    }
+    While([(c:Int,2):Int,[4:Int,(t1:Int,1):Int](+):Int](>):Bool)
+    {
+      (c:Int,2)=[(c:Int,2):Int,1:Int](+):Int;
+    }
+    Return (t1:Int,1):Int;
+  }
+
+}
+class B extends A {
+   Int t1;
+   Int s1;
+
+  Void method1(){
+    Int b;
+    Return;
+  }
+
+
+  Void method1(Int a){
+    Int b;
+    A t;
+    [(t:A,2):A.method1()]:Void;
+    If([(b:Int,2):Int,0:Int](>):Bool)
+    {
+      [(t:A,2):A.test_method1((b:Int,2):Int)]:Int;
+    }
+    else
+    {
+      [method1()]:Void;
+    }
+    (t:A,2)=new B():B;
+    [(B)(t:A,2):A:B.method1()]:Void;
+    [method1(3:Int)]:Void;
+    (b:Int,2)=[[(a:Int,2):Int,1:Int](+):Int,[(s1:Int,1):Int,(t1:Int,1):Int](*):Int](-):Int;
+    Return;
+  }
+
+
+  Int method2(){
+    Int a;
+    (a:Int,2)=super:A.t1:Int;
+    Return (a:Int,2):Int;
+  }
+
+}
+
+======= End of MOOL Program =======
+
+

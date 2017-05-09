@@ -1,0 +1,106 @@
+Parsing...
+ex1.txt
+
+======= MOOL Program =======
+
+class Main{
+  Void main(Int i,Int a,Int b,Int d){
+    Int t1;
+    Int t2;
+    Return;
+  }
+
+} 
+
+class DummyP{
+   Int i;
+
+
+}
+class Dummy extends DummyP {
+   Int i;
+   Dummy j;
+
+  private Int dummy(){
+    Bool i;
+    Bool j;
+    If([i,j](||))
+    {
+      Return 1;
+    }
+    else
+    {
+      While(i)
+      {
+        i=(!)[j];
+      }
+      Return 2;
+    }
+  }
+
+
+  Int getCompute(){
+    DummyP a;
+    Dummy d;
+    d=(Dummy)a;
+    a=(DummyP)d;
+    Return 1;
+  }
+
+}
+
+======= End of MOOL Program =======
+
+Static Checking ...
+
+======= MOOL Program =======
+
+class Main{
+  Void main(Int i,Int a,Int b,Int d){
+    Int t1;
+    Int t2;
+    Return;
+  }
+
+} 
+
+class DummyP{
+   Int i;
+
+
+}
+class Dummy extends DummyP {
+   Int i;
+   Dummy j;
+
+  private Int dummy(){
+    Bool i;
+    Bool j;
+    If([(i:Bool,2):Bool,(j:Bool,2):Bool](||):Bool)
+    {
+      Return 1:Int;
+    }
+    else
+    {
+      While((i:Bool,2):Bool)
+      {
+        (i:Bool,2)=(!)[(j:Bool,2):Bool]:Bool;
+      }
+      Return 2:Int;
+    }
+  }
+
+
+  Int getCompute(){
+    DummyP a;
+    Dummy d;
+    (d:Dummy,2)=(Dummy)(a:DummyP,2):DummyP:Dummy;
+    (a:DummyP,2)=(DummyP)(d:Dummy,2):Dummy:DummyP;
+    Return 1:Int;
+  }
+
+}
+
+======= End of MOOL Program =======
+
+

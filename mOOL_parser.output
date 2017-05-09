@@ -1,0 +1,2731 @@
+   0  $accept : %entry% $end
+
+   1  input : class_main class_decl_list
+
+   2  class_main : CLASS_KWORD CLASS_IDENTIFIER OBRACE method_main CBRACE
+
+   3  inheritence :
+   4              | EXTENDS_KWORD CLASS_IDENTIFIER
+
+   5  class_decl : CLASS_KWORD CLASS_IDENTIFIER inheritence OBRACE varmth_varmth_decl_list method_decl_list CBRACE
+
+   6  class_decl_list :
+   7                  | non_zero_class_decl_list
+
+   8  non_zero_class_decl_list : class_decl
+   9                           | non_zero_class_decl_list class_decl
+
+  10  modifier :
+  11           | PRIVATE_KWORD
+
+  12  method_main : VOID_KWORD MAIN_KWORD OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE
+
+  13  var_id_rule : VAR_IDENTIFIER
+
+  14  method_decl : type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE
+  15              | modifier type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE
+
+  16  method_decl_list :
+  17                   | non_zero_method_decl_list
+
+  18  non_zero_method_decl_list : method_decl
+  19                            | non_zero_method_decl_list method_decl
+
+  20  type_KWORD : BOOL_KWORD
+  21             | INT_KWORD
+  22             | STRING_KWORD
+  23             | VOID_KWORD
+  24             | CLASS_IDENTIFIER
+
+  25  mthd_param_list :
+  26                  | non_zero_mthd_param_list
+
+  27  non_zero_mthd_param_list : type_KWORD var_id_rule
+  28                           | non_zero_mthd_param_list COMMA type_KWORD var_id_rule
+
+  29  var_decl_stmt_list :
+  30                     | non_zero_var_decl_stmt_list
+
+  31  non_zero_var_decl_stmt_list : type_KWORD var_id_rule SEMICOLON
+  32                              | non_zero_var_decl_stmt_list type_KWORD var_id_rule SEMICOLON
+
+  33  varmth_varmth_decl_list :
+  34                          | non_zero_varmth_decl_list
+
+  35  non_zero_varmth_decl_list : type_KWORD var_id_rule SEMICOLON non_zero_varmth_decl_list
+  36                            | modifier type_KWORD var_id_rule SEMICOLON non_zero_varmth_decl_list
+  37                            | method_decl
+  38                            | type_KWORD var_id_rule SEMICOLON
+
+  39  stmt : RETURN_KWORD exp SEMICOLON
+  40       | RETURN_KWORD SEMICOLON
+  41       | IF_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE
+  42       | WHILE_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE
+  43       | var_id_rule ASSIGN exp SEMICOLON
+  44       | READ_KWORD OPAREN var_id_rule CPAREN SEMICOLON
+  45       | PRINT_KWORD OPAREN exp CPAREN SEMICOLON
+  46       | atom DOT var_id_rule ASSIGN exp SEMICOLON
+  47       | atom OPAREN exp_list CPAREN SEMICOLON
+
+  48  stmt_list :
+  49            | non_zero_stmt_list
+
+  50  non_zero_stmt_list : stmt
+  51                     | stmt non_zero_stmt_list
+
+  52  cast : OPAREN CLASS_IDENTIFIER CPAREN
+
+  53  exp : exp OR exp
+  54      | exp AND exp
+  55      | exp EQ exp
+  56      | exp NEQ exp
+  57      | exp GRE exp
+  58      | exp GEQ exp
+  59      | exp LE exp
+  60      | exp LEQ exp
+  61      | exp PLUS exp
+  62      | exp MINUS exp
+  63      | exp MULTIPLY exp
+  64      | exp DIVIDE exp
+  65      | NEG exp
+  66      | MINUS exp
+  67      | atom
+
+  68  atom : atom DOT var_id_rule
+  69       | STRING_LITERAL
+  70       | INTEGER_LITERAL
+  71       | TRUE_KWORD
+  72       | FALSE_KWORD
+  73       | atom OPAREN exp_list CPAREN
+  74       | THIS_KWORD
+  75       | SUPER_KWORD
+  76       | NULL_KWORD
+  77       | var_id_rule
+  78       | NEW_KWORD CLASS_IDENTIFIER OPAREN CPAREN
+  79       | OPAREN type_KWORD CPAREN atom
+  80       | OPAREN exp CPAREN
+
+  81  exp_list :
+  82           | non_zero_exp_list
+
+  83  non_zero_exp_list : exp
+  84                    | non_zero_exp_list COMMA exp
+
+  85  %entry% : '\001' input
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . input  (85)
+
+	CLASS_KWORD  shift 3
+	.  error
+
+	input  goto 4
+	class_main  goto 5
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	class_main : CLASS_KWORD . CLASS_IDENTIFIER OBRACE method_main CBRACE  (2)
+
+	CLASS_IDENTIFIER  shift 6
+	.  error
+
+
+state 4
+	%entry% : '\001' input .  (85)
+
+	.  reduce 85
+
+
+state 5
+	input : class_main . class_decl_list  (1)
+	class_decl_list : .  (6)
+
+	CLASS_KWORD  shift 7
+	$end  reduce 6
+
+	class_decl_list  goto 8
+	class_decl  goto 9
+	non_zero_class_decl_list  goto 10
+
+
+state 6
+	class_main : CLASS_KWORD CLASS_IDENTIFIER . OBRACE method_main CBRACE  (2)
+
+	OBRACE  shift 11
+	.  error
+
+
+state 7
+	class_decl : CLASS_KWORD . CLASS_IDENTIFIER inheritence OBRACE varmth_varmth_decl_list method_decl_list CBRACE  (5)
+
+	CLASS_IDENTIFIER  shift 12
+	.  error
+
+
+state 8
+	input : class_main class_decl_list .  (1)
+
+	.  reduce 1
+
+
+state 9
+	non_zero_class_decl_list : class_decl .  (8)
+
+	.  reduce 8
+
+
+state 10
+	class_decl_list : non_zero_class_decl_list .  (7)
+	non_zero_class_decl_list : non_zero_class_decl_list . class_decl  (9)
+
+	CLASS_KWORD  shift 7
+	$end  reduce 7
+
+	class_decl  goto 13
+
+
+state 11
+	class_main : CLASS_KWORD CLASS_IDENTIFIER OBRACE . method_main CBRACE  (2)
+
+	VOID_KWORD  shift 14
+	.  error
+
+	method_main  goto 15
+
+
+state 12
+	class_decl : CLASS_KWORD CLASS_IDENTIFIER . inheritence OBRACE varmth_varmth_decl_list method_decl_list CBRACE  (5)
+	inheritence : .  (3)
+
+	EXTENDS_KWORD  shift 16
+	OBRACE  reduce 3
+
+	inheritence  goto 17
+
+
+state 13
+	non_zero_class_decl_list : non_zero_class_decl_list class_decl .  (9)
+
+	.  reduce 9
+
+
+state 14
+	method_main : VOID_KWORD . MAIN_KWORD OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (12)
+
+	MAIN_KWORD  shift 18
+	.  error
+
+
+state 15
+	class_main : CLASS_KWORD CLASS_IDENTIFIER OBRACE method_main . CBRACE  (2)
+
+	CBRACE  shift 19
+	.  error
+
+
+state 16
+	inheritence : EXTENDS_KWORD . CLASS_IDENTIFIER  (4)
+
+	CLASS_IDENTIFIER  shift 20
+	.  error
+
+
+state 17
+	class_decl : CLASS_KWORD CLASS_IDENTIFIER inheritence . OBRACE varmth_varmth_decl_list method_decl_list CBRACE  (5)
+
+	OBRACE  shift 21
+	.  error
+
+
+state 18
+	method_main : VOID_KWORD MAIN_KWORD . OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (12)
+
+	OPAREN  shift 22
+	.  error
+
+
+state 19
+	class_main : CLASS_KWORD CLASS_IDENTIFIER OBRACE method_main CBRACE .  (2)
+
+	.  reduce 2
+
+
+state 20
+	inheritence : EXTENDS_KWORD CLASS_IDENTIFIER .  (4)
+
+	.  reduce 4
+
+
+21: shift/reduce conflict (shift 23, reduce 10) on INT_KWORD
+21: shift/reduce conflict (shift 23, reduce 33) on INT_KWORD
+21: shift/reduce conflict (shift 24, reduce 10) on BOOL_KWORD
+21: shift/reduce conflict (shift 24, reduce 33) on BOOL_KWORD
+21: shift/reduce conflict (shift 25, reduce 10) on STRING_KWORD
+21: shift/reduce conflict (shift 25, reduce 33) on STRING_KWORD
+21: shift/reduce conflict (shift 26, reduce 10) on VOID_KWORD
+21: shift/reduce conflict (shift 26, reduce 33) on VOID_KWORD
+21: shift/reduce conflict (shift 27, reduce 33) on PRIVATE_KWORD
+21: shift/reduce conflict (shift 28, reduce 10) on CLASS_IDENTIFIER
+21: shift/reduce conflict (shift 28, reduce 33) on CLASS_IDENTIFIER
+state 21
+	class_decl : CLASS_KWORD CLASS_IDENTIFIER inheritence OBRACE . varmth_varmth_decl_list method_decl_list CBRACE  (5)
+	modifier : .  (10)
+	varmth_varmth_decl_list : .  (33)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	PRIVATE_KWORD  shift 27
+	CLASS_IDENTIFIER  shift 28
+	CBRACE  reduce 33
+
+	varmth_varmth_decl_list  goto 29
+	modifier  goto 30
+	method_decl  goto 31
+	type_KWORD  goto 32
+	non_zero_varmth_decl_list  goto 33
+
+
+state 22
+	method_main : VOID_KWORD MAIN_KWORD OPAREN . mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (12)
+	mthd_param_list : .  (25)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	CPAREN  reduce 25
+
+	mthd_param_list  goto 34
+	type_KWORD  goto 35
+	non_zero_mthd_param_list  goto 36
+
+
+state 23
+	type_KWORD : INT_KWORD .  (21)
+
+	.  reduce 21
+
+
+state 24
+	type_KWORD : BOOL_KWORD .  (20)
+
+	.  reduce 20
+
+
+state 25
+	type_KWORD : STRING_KWORD .  (22)
+
+	.  reduce 22
+
+
+state 26
+	type_KWORD : VOID_KWORD .  (23)
+
+	.  reduce 23
+
+
+state 27
+	modifier : PRIVATE_KWORD .  (11)
+
+	.  reduce 11
+
+
+state 28
+	type_KWORD : CLASS_IDENTIFIER .  (24)
+
+	.  reduce 24
+
+
+29: shift/reduce conflict (shift 23, reduce 10) on INT_KWORD
+29: shift/reduce conflict (shift 24, reduce 10) on BOOL_KWORD
+29: shift/reduce conflict (shift 25, reduce 10) on STRING_KWORD
+29: shift/reduce conflict (shift 26, reduce 10) on VOID_KWORD
+29: shift/reduce conflict (shift 28, reduce 10) on CLASS_IDENTIFIER
+state 29
+	class_decl : CLASS_KWORD CLASS_IDENTIFIER inheritence OBRACE varmth_varmth_decl_list . method_decl_list CBRACE  (5)
+	modifier : .  (10)
+	method_decl_list : .  (16)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	PRIVATE_KWORD  shift 27
+	CLASS_IDENTIFIER  shift 28
+	CBRACE  reduce 16
+
+	method_decl_list  goto 37
+	modifier  goto 38
+	method_decl  goto 39
+	type_KWORD  goto 40
+	non_zero_method_decl_list  goto 41
+
+
+state 30
+	method_decl : modifier . type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+	non_zero_varmth_decl_list : modifier . type_KWORD var_id_rule SEMICOLON non_zero_varmth_decl_list  (36)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	.  error
+
+	type_KWORD  goto 42
+
+
+state 31
+	non_zero_varmth_decl_list : method_decl .  (37)
+
+	.  reduce 37
+
+
+state 32
+	method_decl : type_KWORD . var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+	non_zero_varmth_decl_list : type_KWORD . var_id_rule SEMICOLON non_zero_varmth_decl_list  (35)
+	non_zero_varmth_decl_list : type_KWORD . var_id_rule SEMICOLON  (38)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 44
+
+
+state 33
+	varmth_varmth_decl_list : non_zero_varmth_decl_list .  (34)
+
+	.  reduce 34
+
+
+state 34
+	method_main : VOID_KWORD MAIN_KWORD OPAREN mthd_param_list . CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (12)
+
+	CPAREN  shift 45
+	.  error
+
+
+state 35
+	non_zero_mthd_param_list : type_KWORD . var_id_rule  (27)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 46
+
+
+state 36
+	mthd_param_list : non_zero_mthd_param_list .  (26)
+	non_zero_mthd_param_list : non_zero_mthd_param_list . COMMA type_KWORD var_id_rule  (28)
+
+	COMMA  shift 47
+	CPAREN  reduce 26
+
+
+state 37
+	class_decl : CLASS_KWORD CLASS_IDENTIFIER inheritence OBRACE varmth_varmth_decl_list method_decl_list . CBRACE  (5)
+
+	CBRACE  shift 48
+	.  error
+
+
+state 38
+	method_decl : modifier . type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	.  error
+
+	type_KWORD  goto 49
+
+
+state 39
+	non_zero_method_decl_list : method_decl .  (18)
+
+	.  reduce 18
+
+
+state 40
+	method_decl : type_KWORD . var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 50
+
+
+41: shift/reduce conflict (shift 23, reduce 10) on INT_KWORD
+41: shift/reduce conflict (shift 24, reduce 10) on BOOL_KWORD
+41: shift/reduce conflict (shift 25, reduce 10) on STRING_KWORD
+41: shift/reduce conflict (shift 26, reduce 10) on VOID_KWORD
+41: shift/reduce conflict (shift 28, reduce 10) on CLASS_IDENTIFIER
+state 41
+	method_decl_list : non_zero_method_decl_list .  (17)
+	non_zero_method_decl_list : non_zero_method_decl_list . method_decl  (19)
+	modifier : .  (10)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	PRIVATE_KWORD  shift 27
+	CLASS_IDENTIFIER  shift 28
+	CBRACE  reduce 17
+
+	modifier  goto 38
+	method_decl  goto 51
+	type_KWORD  goto 40
+
+
+state 42
+	method_decl : modifier type_KWORD . var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+	non_zero_varmth_decl_list : modifier type_KWORD . var_id_rule SEMICOLON non_zero_varmth_decl_list  (36)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 52
+
+
+state 43
+	var_id_rule : VAR_IDENTIFIER .  (13)
+
+	.  reduce 13
+
+
+state 44
+	method_decl : type_KWORD var_id_rule . OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+	non_zero_varmth_decl_list : type_KWORD var_id_rule . SEMICOLON non_zero_varmth_decl_list  (35)
+	non_zero_varmth_decl_list : type_KWORD var_id_rule . SEMICOLON  (38)
+
+	OPAREN  shift 53
+	SEMICOLON  shift 54
+	.  error
+
+
+state 45
+	method_main : VOID_KWORD MAIN_KWORD OPAREN mthd_param_list CPAREN . OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (12)
+
+	OBRACE  shift 55
+	.  error
+
+
+state 46
+	non_zero_mthd_param_list : type_KWORD var_id_rule .  (27)
+
+	.  reduce 27
+
+
+state 47
+	non_zero_mthd_param_list : non_zero_mthd_param_list COMMA . type_KWORD var_id_rule  (28)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	.  error
+
+	type_KWORD  goto 56
+
+
+state 48
+	class_decl : CLASS_KWORD CLASS_IDENTIFIER inheritence OBRACE varmth_varmth_decl_list method_decl_list CBRACE .  (5)
+
+	.  reduce 5
+
+
+state 49
+	method_decl : modifier type_KWORD . var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 57
+
+
+state 50
+	method_decl : type_KWORD var_id_rule . OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+
+	OPAREN  shift 53
+	.  error
+
+
+state 51
+	non_zero_method_decl_list : non_zero_method_decl_list method_decl .  (19)
+
+	.  reduce 19
+
+
+state 52
+	method_decl : modifier type_KWORD var_id_rule . OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+	non_zero_varmth_decl_list : modifier type_KWORD var_id_rule . SEMICOLON non_zero_varmth_decl_list  (36)
+
+	OPAREN  shift 58
+	SEMICOLON  shift 59
+	.  error
+
+
+state 53
+	method_decl : type_KWORD var_id_rule OPAREN . mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+	mthd_param_list : .  (25)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	CPAREN  reduce 25
+
+	mthd_param_list  goto 60
+	type_KWORD  goto 35
+	non_zero_mthd_param_list  goto 36
+
+
+54: shift/reduce conflict (shift 23, reduce 10) on INT_KWORD
+54: shift/reduce conflict (shift 23, reduce 38) on INT_KWORD
+54: shift/reduce conflict (shift 24, reduce 10) on BOOL_KWORD
+54: shift/reduce conflict (shift 24, reduce 38) on BOOL_KWORD
+54: shift/reduce conflict (shift 25, reduce 10) on STRING_KWORD
+54: shift/reduce conflict (shift 25, reduce 38) on STRING_KWORD
+54: shift/reduce conflict (shift 26, reduce 10) on VOID_KWORD
+54: shift/reduce conflict (shift 26, reduce 38) on VOID_KWORD
+54: shift/reduce conflict (shift 27, reduce 38) on PRIVATE_KWORD
+54: shift/reduce conflict (shift 28, reduce 10) on CLASS_IDENTIFIER
+54: shift/reduce conflict (shift 28, reduce 38) on CLASS_IDENTIFIER
+state 54
+	non_zero_varmth_decl_list : type_KWORD var_id_rule SEMICOLON . non_zero_varmth_decl_list  (35)
+	non_zero_varmth_decl_list : type_KWORD var_id_rule SEMICOLON .  (38)
+	modifier : .  (10)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	PRIVATE_KWORD  shift 27
+	CLASS_IDENTIFIER  shift 28
+	CBRACE  reduce 38
+
+	modifier  goto 30
+	method_decl  goto 31
+	type_KWORD  goto 32
+	non_zero_varmth_decl_list  goto 61
+
+
+state 55
+	method_main : VOID_KWORD MAIN_KWORD OPAREN mthd_param_list CPAREN OBRACE . var_decl_stmt_list non_zero_stmt_list CBRACE  (12)
+	var_decl_stmt_list : .  (29)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	TRUE_KWORD  reduce 29
+	FALSE_KWORD  reduce 29
+	WHILE_KWORD  reduce 29
+	IF_KWORD  reduce 29
+	RETURN_KWORD  reduce 29
+	THIS_KWORD  reduce 29
+	SUPER_KWORD  reduce 29
+	NULL_KWORD  reduce 29
+	NEW_KWORD  reduce 29
+	READ_KWORD  reduce 29
+	PRINT_KWORD  reduce 29
+	INTEGER_LITERAL  reduce 29
+	STRING_LITERAL  reduce 29
+	VAR_IDENTIFIER  reduce 29
+	OPAREN  reduce 29
+
+	var_decl_stmt_list  goto 62
+	type_KWORD  goto 63
+	non_zero_var_decl_stmt_list  goto 64
+
+
+state 56
+	non_zero_mthd_param_list : non_zero_mthd_param_list COMMA type_KWORD . var_id_rule  (28)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 65
+
+
+state 57
+	method_decl : modifier type_KWORD var_id_rule . OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+
+	OPAREN  shift 58
+	.  error
+
+
+state 58
+	method_decl : modifier type_KWORD var_id_rule OPAREN . mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+	mthd_param_list : .  (25)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	CPAREN  reduce 25
+
+	mthd_param_list  goto 66
+	type_KWORD  goto 35
+	non_zero_mthd_param_list  goto 36
+
+
+59: shift/reduce conflict (shift 23, reduce 10) on INT_KWORD
+59: shift/reduce conflict (shift 24, reduce 10) on BOOL_KWORD
+59: shift/reduce conflict (shift 25, reduce 10) on STRING_KWORD
+59: shift/reduce conflict (shift 26, reduce 10) on VOID_KWORD
+59: shift/reduce conflict (shift 28, reduce 10) on CLASS_IDENTIFIER
+state 59
+	non_zero_varmth_decl_list : modifier type_KWORD var_id_rule SEMICOLON . non_zero_varmth_decl_list  (36)
+	modifier : .  (10)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	PRIVATE_KWORD  shift 27
+	CLASS_IDENTIFIER  shift 28
+
+	modifier  goto 30
+	method_decl  goto 31
+	type_KWORD  goto 32
+	non_zero_varmth_decl_list  goto 67
+
+
+state 60
+	method_decl : type_KWORD var_id_rule OPAREN mthd_param_list . CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+
+	CPAREN  shift 68
+	.  error
+
+
+state 61
+	non_zero_varmth_decl_list : type_KWORD var_id_rule SEMICOLON non_zero_varmth_decl_list .  (35)
+
+	.  reduce 35
+
+
+state 62
+	method_main : VOID_KWORD MAIN_KWORD OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list . non_zero_stmt_list CBRACE  (12)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	WHILE_KWORD  shift 71
+	IF_KWORD  shift 72
+	RETURN_KWORD  shift 73
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	READ_KWORD  shift 78
+	PRINT_KWORD  shift 79
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	non_zero_stmt_list  goto 83
+	var_id_rule  goto 84
+	stmt  goto 85
+	atom  goto 86
+
+
+state 63
+	non_zero_var_decl_stmt_list : type_KWORD . var_id_rule SEMICOLON  (31)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 87
+
+
+state 64
+	var_decl_stmt_list : non_zero_var_decl_stmt_list .  (30)
+	non_zero_var_decl_stmt_list : non_zero_var_decl_stmt_list . type_KWORD var_id_rule SEMICOLON  (32)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	TRUE_KWORD  reduce 30
+	FALSE_KWORD  reduce 30
+	WHILE_KWORD  reduce 30
+	IF_KWORD  reduce 30
+	RETURN_KWORD  reduce 30
+	THIS_KWORD  reduce 30
+	SUPER_KWORD  reduce 30
+	NULL_KWORD  reduce 30
+	NEW_KWORD  reduce 30
+	READ_KWORD  reduce 30
+	PRINT_KWORD  reduce 30
+	INTEGER_LITERAL  reduce 30
+	STRING_LITERAL  reduce 30
+	VAR_IDENTIFIER  reduce 30
+	OPAREN  reduce 30
+
+	type_KWORD  goto 88
+
+
+state 65
+	non_zero_mthd_param_list : non_zero_mthd_param_list COMMA type_KWORD var_id_rule .  (28)
+
+	.  reduce 28
+
+
+state 66
+	method_decl : modifier type_KWORD var_id_rule OPAREN mthd_param_list . CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+
+	CPAREN  shift 89
+	.  error
+
+
+state 67
+	non_zero_varmth_decl_list : modifier type_KWORD var_id_rule SEMICOLON non_zero_varmth_decl_list .  (36)
+
+	.  reduce 36
+
+
+state 68
+	method_decl : type_KWORD var_id_rule OPAREN mthd_param_list CPAREN . OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+
+	OBRACE  shift 90
+	.  error
+
+
+state 69
+	atom : TRUE_KWORD .  (71)
+
+	.  reduce 71
+
+
+state 70
+	atom : FALSE_KWORD .  (72)
+
+	.  reduce 72
+
+
+state 71
+	stmt : WHILE_KWORD . OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE  (42)
+
+	OPAREN  shift 91
+	.  error
+
+
+state 72
+	stmt : IF_KWORD . OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE  (41)
+
+	OPAREN  shift 92
+	.  error
+
+
+state 73
+	stmt : RETURN_KWORD . exp SEMICOLON  (39)
+	stmt : RETURN_KWORD . SEMICOLON  (40)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	SEMICOLON  shift 95
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 97
+	atom  goto 98
+
+
+state 74
+	atom : THIS_KWORD .  (74)
+
+	.  reduce 74
+
+
+state 75
+	atom : SUPER_KWORD .  (75)
+
+	.  reduce 75
+
+
+state 76
+	atom : NULL_KWORD .  (76)
+
+	.  reduce 76
+
+
+state 77
+	atom : NEW_KWORD . CLASS_IDENTIFIER OPAREN CPAREN  (78)
+
+	CLASS_IDENTIFIER  shift 99
+	.  error
+
+
+state 78
+	stmt : READ_KWORD . OPAREN var_id_rule CPAREN SEMICOLON  (44)
+
+	OPAREN  shift 100
+	.  error
+
+
+state 79
+	stmt : PRINT_KWORD . OPAREN exp CPAREN SEMICOLON  (45)
+
+	OPAREN  shift 101
+	.  error
+
+
+state 80
+	atom : INTEGER_LITERAL .  (70)
+
+	.  reduce 70
+
+
+state 81
+	atom : STRING_LITERAL .  (69)
+
+	.  reduce 69
+
+
+state 82
+	atom : OPAREN . type_KWORD CPAREN atom  (79)
+	atom : OPAREN . exp CPAREN  (80)
+
+	MINUS  shift 93
+	NEG  shift 94
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	CLASS_IDENTIFIER  shift 28
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	type_KWORD  goto 102
+	exp  goto 103
+	atom  goto 98
+
+
+state 83
+	method_main : VOID_KWORD MAIN_KWORD OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list . CBRACE  (12)
+
+	CBRACE  shift 104
+	.  error
+
+
+state 84
+	stmt : var_id_rule . ASSIGN exp SEMICOLON  (43)
+	atom : var_id_rule .  (77)
+
+	ASSIGN  shift 105
+	OPAREN  reduce 77
+	DOT  reduce 77
+
+
+state 85
+	non_zero_stmt_list : stmt .  (50)
+	non_zero_stmt_list : stmt . non_zero_stmt_list  (51)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	WHILE_KWORD  shift 71
+	IF_KWORD  shift 72
+	RETURN_KWORD  shift 73
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	READ_KWORD  shift 78
+	PRINT_KWORD  shift 79
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	CBRACE  reduce 50
+
+	non_zero_stmt_list  goto 106
+	var_id_rule  goto 84
+	stmt  goto 85
+	atom  goto 86
+
+
+state 86
+	stmt : atom . DOT var_id_rule ASSIGN exp SEMICOLON  (46)
+	stmt : atom . OPAREN exp_list CPAREN SEMICOLON  (47)
+	atom : atom . DOT var_id_rule  (68)
+	atom : atom . OPAREN exp_list CPAREN  (73)
+
+	OPAREN  shift 107
+	DOT  shift 108
+	.  error
+
+
+state 87
+	non_zero_var_decl_stmt_list : type_KWORD var_id_rule . SEMICOLON  (31)
+
+	SEMICOLON  shift 109
+	.  error
+
+
+state 88
+	non_zero_var_decl_stmt_list : non_zero_var_decl_stmt_list type_KWORD . var_id_rule SEMICOLON  (32)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 110
+
+
+state 89
+	method_decl : modifier type_KWORD var_id_rule OPAREN mthd_param_list CPAREN . OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+
+	OBRACE  shift 111
+	.  error
+
+
+state 90
+	method_decl : type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE . var_decl_stmt_list non_zero_stmt_list CBRACE  (14)
+	var_decl_stmt_list : .  (29)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	TRUE_KWORD  reduce 29
+	FALSE_KWORD  reduce 29
+	WHILE_KWORD  reduce 29
+	IF_KWORD  reduce 29
+	RETURN_KWORD  reduce 29
+	THIS_KWORD  reduce 29
+	SUPER_KWORD  reduce 29
+	NULL_KWORD  reduce 29
+	NEW_KWORD  reduce 29
+	READ_KWORD  reduce 29
+	PRINT_KWORD  reduce 29
+	INTEGER_LITERAL  reduce 29
+	STRING_LITERAL  reduce 29
+	VAR_IDENTIFIER  reduce 29
+	OPAREN  reduce 29
+
+	var_decl_stmt_list  goto 112
+	type_KWORD  goto 63
+	non_zero_var_decl_stmt_list  goto 64
+
+
+state 91
+	stmt : WHILE_KWORD OPAREN . exp CPAREN OBRACE non_zero_stmt_list CBRACE  (42)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 113
+	atom  goto 98
+
+
+state 92
+	stmt : IF_KWORD OPAREN . exp CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE  (41)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 114
+	atom  goto 98
+
+
+state 93
+	exp : MINUS . exp  (66)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 115
+	atom  goto 98
+
+
+state 94
+	exp : NEG . exp  (65)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 116
+	atom  goto 98
+
+
+state 95
+	stmt : RETURN_KWORD SEMICOLON .  (40)
+
+	.  reduce 40
+
+
+state 96
+	atom : var_id_rule .  (77)
+
+	.  reduce 77
+
+
+state 97
+	stmt : RETURN_KWORD exp . SEMICOLON  (39)
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	SEMICOLON  shift 129
+	.  error
+
+
+state 98
+	exp : atom .  (67)
+	atom : atom . DOT var_id_rule  (68)
+	atom : atom . OPAREN exp_list CPAREN  (73)
+
+	OPAREN  shift 130
+	DOT  shift 131
+	AND  reduce 67
+	OR  reduce 67
+	EQ  reduce 67
+	NEQ  reduce 67
+	PLUS  reduce 67
+	MINUS  reduce 67
+	MULTIPLY  reduce 67
+	DIVIDE  reduce 67
+	GRE  reduce 67
+	GEQ  reduce 67
+	LE  reduce 67
+	LEQ  reduce 67
+	CPAREN  reduce 67
+	SEMICOLON  reduce 67
+	COMMA  reduce 67
+
+
+state 99
+	atom : NEW_KWORD CLASS_IDENTIFIER . OPAREN CPAREN  (78)
+
+	OPAREN  shift 132
+	.  error
+
+
+state 100
+	stmt : READ_KWORD OPAREN . var_id_rule CPAREN SEMICOLON  (44)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 133
+
+
+state 101
+	stmt : PRINT_KWORD OPAREN . exp CPAREN SEMICOLON  (45)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 134
+	atom  goto 98
+
+
+state 102
+	atom : OPAREN type_KWORD . CPAREN atom  (79)
+
+	CPAREN  shift 135
+	.  error
+
+
+state 103
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+	atom : OPAREN exp . CPAREN  (80)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	CPAREN  shift 136
+	.  error
+
+
+state 104
+	method_main : VOID_KWORD MAIN_KWORD OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE .  (12)
+
+	.  reduce 12
+
+
+state 105
+	stmt : var_id_rule ASSIGN . exp SEMICOLON  (43)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 137
+	atom  goto 98
+
+
+state 106
+	non_zero_stmt_list : stmt non_zero_stmt_list .  (51)
+
+	.  reduce 51
+
+
+state 107
+	stmt : atom OPAREN . exp_list CPAREN SEMICOLON  (47)
+	atom : atom OPAREN . exp_list CPAREN  (73)
+	exp_list : .  (81)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	CPAREN  reduce 81
+
+	var_id_rule  goto 96
+	exp  goto 138
+	atom  goto 98
+	exp_list  goto 139
+	non_zero_exp_list  goto 140
+
+
+state 108
+	stmt : atom DOT . var_id_rule ASSIGN exp SEMICOLON  (46)
+	atom : atom DOT . var_id_rule  (68)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 141
+
+
+state 109
+	non_zero_var_decl_stmt_list : type_KWORD var_id_rule SEMICOLON .  (31)
+
+	.  reduce 31
+
+
+state 110
+	non_zero_var_decl_stmt_list : non_zero_var_decl_stmt_list type_KWORD var_id_rule . SEMICOLON  (32)
+
+	SEMICOLON  shift 142
+	.  error
+
+
+state 111
+	method_decl : modifier type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE . var_decl_stmt_list non_zero_stmt_list CBRACE  (15)
+	var_decl_stmt_list : .  (29)
+
+	INT_KWORD  shift 23
+	BOOL_KWORD  shift 24
+	STRING_KWORD  shift 25
+	VOID_KWORD  shift 26
+	CLASS_IDENTIFIER  shift 28
+	TRUE_KWORD  reduce 29
+	FALSE_KWORD  reduce 29
+	WHILE_KWORD  reduce 29
+	IF_KWORD  reduce 29
+	RETURN_KWORD  reduce 29
+	THIS_KWORD  reduce 29
+	SUPER_KWORD  reduce 29
+	NULL_KWORD  reduce 29
+	NEW_KWORD  reduce 29
+	READ_KWORD  reduce 29
+	PRINT_KWORD  reduce 29
+	INTEGER_LITERAL  reduce 29
+	STRING_LITERAL  reduce 29
+	VAR_IDENTIFIER  reduce 29
+	OPAREN  reduce 29
+
+	var_decl_stmt_list  goto 143
+	type_KWORD  goto 63
+	non_zero_var_decl_stmt_list  goto 64
+
+
+state 112
+	method_decl : type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list . non_zero_stmt_list CBRACE  (14)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	WHILE_KWORD  shift 71
+	IF_KWORD  shift 72
+	RETURN_KWORD  shift 73
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	READ_KWORD  shift 78
+	PRINT_KWORD  shift 79
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	non_zero_stmt_list  goto 144
+	var_id_rule  goto 84
+	stmt  goto 85
+	atom  goto 86
+
+
+state 113
+	stmt : WHILE_KWORD OPAREN exp . CPAREN OBRACE non_zero_stmt_list CBRACE  (42)
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	CPAREN  shift 145
+	.  error
+
+
+state 114
+	stmt : IF_KWORD OPAREN exp . CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE  (41)
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	CPAREN  shift 146
+	.  error
+
+
+state 115
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+	exp : MINUS exp .  (66)
+
+	.  reduce 66
+
+
+state 116
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+	exp : NEG exp .  (65)
+
+	.  reduce 65
+
+
+state 117
+	exp : exp AND . exp  (54)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 147
+	atom  goto 98
+
+
+state 118
+	exp : exp OR . exp  (53)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 148
+	atom  goto 98
+
+
+state 119
+	exp : exp EQ . exp  (55)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 149
+	atom  goto 98
+
+
+state 120
+	exp : exp NEQ . exp  (56)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 150
+	atom  goto 98
+
+
+state 121
+	exp : exp PLUS . exp  (61)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 151
+	atom  goto 98
+
+
+state 122
+	exp : exp MINUS . exp  (62)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 152
+	atom  goto 98
+
+
+state 123
+	exp : exp MULTIPLY . exp  (63)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 153
+	atom  goto 98
+
+
+state 124
+	exp : exp DIVIDE . exp  (64)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 154
+	atom  goto 98
+
+
+state 125
+	exp : exp GRE . exp  (57)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 155
+	atom  goto 98
+
+
+state 126
+	exp : exp GEQ . exp  (58)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 156
+	atom  goto 98
+
+
+state 127
+	exp : exp LE . exp  (59)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 157
+	atom  goto 98
+
+
+state 128
+	exp : exp LEQ . exp  (60)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 158
+	atom  goto 98
+
+
+state 129
+	stmt : RETURN_KWORD exp SEMICOLON .  (39)
+
+	.  reduce 39
+
+
+state 130
+	atom : atom OPAREN . exp_list CPAREN  (73)
+	exp_list : .  (81)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	CPAREN  reduce 81
+
+	var_id_rule  goto 96
+	exp  goto 138
+	atom  goto 98
+	exp_list  goto 159
+	non_zero_exp_list  goto 140
+
+
+state 131
+	atom : atom DOT . var_id_rule  (68)
+
+	VAR_IDENTIFIER  shift 43
+	.  error
+
+	var_id_rule  goto 160
+
+
+state 132
+	atom : NEW_KWORD CLASS_IDENTIFIER OPAREN . CPAREN  (78)
+
+	CPAREN  shift 161
+	.  error
+
+
+state 133
+	stmt : READ_KWORD OPAREN var_id_rule . CPAREN SEMICOLON  (44)
+
+	CPAREN  shift 162
+	.  error
+
+
+state 134
+	stmt : PRINT_KWORD OPAREN exp . CPAREN SEMICOLON  (45)
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	CPAREN  shift 163
+	.  error
+
+
+state 135
+	atom : OPAREN type_KWORD CPAREN . atom  (79)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	atom  goto 164
+
+
+state 136
+	atom : OPAREN exp CPAREN .  (80)
+
+	.  reduce 80
+
+
+state 137
+	stmt : var_id_rule ASSIGN exp . SEMICOLON  (43)
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	SEMICOLON  shift 165
+	.  error
+
+
+state 138
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+	non_zero_exp_list : exp .  (83)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	CPAREN  reduce 83
+	COMMA  reduce 83
+
+
+state 139
+	stmt : atom OPAREN exp_list . CPAREN SEMICOLON  (47)
+	atom : atom OPAREN exp_list . CPAREN  (73)
+
+	CPAREN  shift 166
+	.  error
+
+
+state 140
+	exp_list : non_zero_exp_list .  (82)
+	non_zero_exp_list : non_zero_exp_list . COMMA exp  (84)
+
+	COMMA  shift 167
+	CPAREN  reduce 82
+
+
+state 141
+	stmt : atom DOT var_id_rule . ASSIGN exp SEMICOLON  (46)
+	atom : atom DOT var_id_rule .  (68)
+
+	ASSIGN  shift 168
+	OPAREN  reduce 68
+	DOT  reduce 68
+
+
+state 142
+	non_zero_var_decl_stmt_list : non_zero_var_decl_stmt_list type_KWORD var_id_rule SEMICOLON .  (32)
+
+	.  reduce 32
+
+
+state 143
+	method_decl : modifier type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list . non_zero_stmt_list CBRACE  (15)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	WHILE_KWORD  shift 71
+	IF_KWORD  shift 72
+	RETURN_KWORD  shift 73
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	READ_KWORD  shift 78
+	PRINT_KWORD  shift 79
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	non_zero_stmt_list  goto 169
+	var_id_rule  goto 84
+	stmt  goto 85
+	atom  goto 86
+
+
+state 144
+	method_decl : type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list . CBRACE  (14)
+
+	CBRACE  shift 170
+	.  error
+
+
+state 145
+	stmt : WHILE_KWORD OPAREN exp CPAREN . OBRACE non_zero_stmt_list CBRACE  (42)
+
+	OBRACE  shift 171
+	.  error
+
+
+state 146
+	stmt : IF_KWORD OPAREN exp CPAREN . OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE  (41)
+
+	OBRACE  shift 172
+	.  error
+
+
+state 147
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp AND exp .  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	AND  reduce 54
+	OR  reduce 54
+	CPAREN  reduce 54
+	SEMICOLON  reduce 54
+	COMMA  reduce 54
+
+
+state 148
+	exp : exp . OR exp  (53)
+	exp : exp OR exp .  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	AND  reduce 53
+	OR  reduce 53
+	CPAREN  reduce 53
+	SEMICOLON  reduce 53
+	COMMA  reduce 53
+
+
+state 149
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp EQ exp .  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 55
+	OR  reduce 55
+	CPAREN  reduce 55
+	SEMICOLON  reduce 55
+	COMMA  reduce 55
+
+
+state 150
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp NEQ exp .  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 56
+	OR  reduce 56
+	CPAREN  reduce 56
+	SEMICOLON  reduce 56
+	COMMA  reduce 56
+
+
+state 151
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp PLUS exp .  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 61
+	OR  reduce 61
+	EQ  reduce 61
+	NEQ  reduce 61
+	PLUS  reduce 61
+	MINUS  reduce 61
+	GRE  reduce 61
+	GEQ  reduce 61
+	LE  reduce 61
+	LEQ  reduce 61
+	CPAREN  reduce 61
+	SEMICOLON  reduce 61
+	COMMA  reduce 61
+
+
+state 152
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp MINUS exp .  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 62
+	OR  reduce 62
+	EQ  reduce 62
+	NEQ  reduce 62
+	PLUS  reduce 62
+	MINUS  reduce 62
+	GRE  reduce 62
+	GEQ  reduce 62
+	LE  reduce 62
+	LEQ  reduce 62
+	CPAREN  reduce 62
+	SEMICOLON  reduce 62
+	COMMA  reduce 62
+
+
+state 153
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp MULTIPLY exp .  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	.  reduce 63
+
+
+state 154
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+	exp : exp DIVIDE exp .  (64)
+
+	.  reduce 64
+
+
+state 155
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp GRE exp .  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 57
+	OR  reduce 57
+	CPAREN  reduce 57
+	SEMICOLON  reduce 57
+	COMMA  reduce 57
+
+
+state 156
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp GEQ exp .  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 58
+	OR  reduce 58
+	CPAREN  reduce 58
+	SEMICOLON  reduce 58
+	COMMA  reduce 58
+
+
+state 157
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp LE exp .  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 59
+	OR  reduce 59
+	CPAREN  reduce 59
+	SEMICOLON  reduce 59
+	COMMA  reduce 59
+
+
+state 158
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp LEQ exp .  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	AND  reduce 60
+	OR  reduce 60
+	CPAREN  reduce 60
+	SEMICOLON  reduce 60
+	COMMA  reduce 60
+
+
+state 159
+	atom : atom OPAREN exp_list . CPAREN  (73)
+
+	CPAREN  shift 173
+	.  error
+
+
+state 160
+	atom : atom DOT var_id_rule .  (68)
+
+	.  reduce 68
+
+
+state 161
+	atom : NEW_KWORD CLASS_IDENTIFIER OPAREN CPAREN .  (78)
+
+	.  reduce 78
+
+
+state 162
+	stmt : READ_KWORD OPAREN var_id_rule CPAREN . SEMICOLON  (44)
+
+	SEMICOLON  shift 174
+	.  error
+
+
+state 163
+	stmt : PRINT_KWORD OPAREN exp CPAREN . SEMICOLON  (45)
+
+	SEMICOLON  shift 175
+	.  error
+
+
+164: shift/reduce conflict (shift 130, reduce 79) on OPAREN
+164: shift/reduce conflict (shift 131, reduce 79) on DOT
+state 164
+	atom : atom . DOT var_id_rule  (68)
+	atom : atom . OPAREN exp_list CPAREN  (73)
+	atom : OPAREN type_KWORD CPAREN atom .  (79)
+
+	OPAREN  shift 130
+	DOT  shift 131
+	AND  reduce 79
+	OR  reduce 79
+	EQ  reduce 79
+	NEQ  reduce 79
+	PLUS  reduce 79
+	MINUS  reduce 79
+	MULTIPLY  reduce 79
+	DIVIDE  reduce 79
+	GRE  reduce 79
+	GEQ  reduce 79
+	LE  reduce 79
+	LEQ  reduce 79
+	CPAREN  reduce 79
+	SEMICOLON  reduce 79
+	COMMA  reduce 79
+
+
+state 165
+	stmt : var_id_rule ASSIGN exp SEMICOLON .  (43)
+
+	.  reduce 43
+
+
+state 166
+	stmt : atom OPAREN exp_list CPAREN . SEMICOLON  (47)
+	atom : atom OPAREN exp_list CPAREN .  (73)
+
+	SEMICOLON  shift 176
+	OPAREN  reduce 73
+	DOT  reduce 73
+
+
+state 167
+	non_zero_exp_list : non_zero_exp_list COMMA . exp  (84)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 177
+	atom  goto 98
+
+
+state 168
+	stmt : atom DOT var_id_rule ASSIGN . exp SEMICOLON  (46)
+
+	MINUS  shift 93
+	NEG  shift 94
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	var_id_rule  goto 96
+	exp  goto 178
+	atom  goto 98
+
+
+state 169
+	method_decl : modifier type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list . CBRACE  (15)
+
+	CBRACE  shift 179
+	.  error
+
+
+state 170
+	method_decl : type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE .  (14)
+
+	.  reduce 14
+
+
+state 171
+	stmt : WHILE_KWORD OPAREN exp CPAREN OBRACE . non_zero_stmt_list CBRACE  (42)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	WHILE_KWORD  shift 71
+	IF_KWORD  shift 72
+	RETURN_KWORD  shift 73
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	READ_KWORD  shift 78
+	PRINT_KWORD  shift 79
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	non_zero_stmt_list  goto 180
+	var_id_rule  goto 84
+	stmt  goto 85
+	atom  goto 86
+
+
+state 172
+	stmt : IF_KWORD OPAREN exp CPAREN OBRACE . non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE  (41)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	WHILE_KWORD  shift 71
+	IF_KWORD  shift 72
+	RETURN_KWORD  shift 73
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	READ_KWORD  shift 78
+	PRINT_KWORD  shift 79
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	non_zero_stmt_list  goto 181
+	var_id_rule  goto 84
+	stmt  goto 85
+	atom  goto 86
+
+
+state 173
+	atom : atom OPAREN exp_list CPAREN .  (73)
+
+	.  reduce 73
+
+
+state 174
+	stmt : READ_KWORD OPAREN var_id_rule CPAREN SEMICOLON .  (44)
+
+	.  reduce 44
+
+
+state 175
+	stmt : PRINT_KWORD OPAREN exp CPAREN SEMICOLON .  (45)
+
+	.  reduce 45
+
+
+state 176
+	stmt : atom OPAREN exp_list CPAREN SEMICOLON .  (47)
+
+	.  reduce 47
+
+
+state 177
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+	non_zero_exp_list : non_zero_exp_list COMMA exp .  (84)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	CPAREN  reduce 84
+	COMMA  reduce 84
+
+
+state 178
+	stmt : atom DOT var_id_rule ASSIGN exp . SEMICOLON  (46)
+	exp : exp . OR exp  (53)
+	exp : exp . AND exp  (54)
+	exp : exp . EQ exp  (55)
+	exp : exp . NEQ exp  (56)
+	exp : exp . GRE exp  (57)
+	exp : exp . GEQ exp  (58)
+	exp : exp . LE exp  (59)
+	exp : exp . LEQ exp  (60)
+	exp : exp . PLUS exp  (61)
+	exp : exp . MINUS exp  (62)
+	exp : exp . MULTIPLY exp  (63)
+	exp : exp . DIVIDE exp  (64)
+
+	AND  shift 117
+	OR  shift 118
+	EQ  shift 119
+	NEQ  shift 120
+	PLUS  shift 121
+	MINUS  shift 122
+	MULTIPLY  shift 123
+	DIVIDE  shift 124
+	GRE  shift 125
+	GEQ  shift 126
+	LE  shift 127
+	LEQ  shift 128
+	SEMICOLON  shift 182
+	.  error
+
+
+state 179
+	method_decl : modifier type_KWORD var_id_rule OPAREN mthd_param_list CPAREN OBRACE var_decl_stmt_list non_zero_stmt_list CBRACE .  (15)
+
+	.  reduce 15
+
+
+state 180
+	stmt : WHILE_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list . CBRACE  (42)
+
+	CBRACE  shift 183
+	.  error
+
+
+state 181
+	stmt : IF_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list . CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE  (41)
+
+	CBRACE  shift 184
+	.  error
+
+
+state 182
+	stmt : atom DOT var_id_rule ASSIGN exp SEMICOLON .  (46)
+
+	.  reduce 46
+
+
+state 183
+	stmt : WHILE_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE .  (42)
+
+	.  reduce 42
+
+
+state 184
+	stmt : IF_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE . ELSE_KWORD OBRACE non_zero_stmt_list CBRACE  (41)
+
+	ELSE_KWORD  shift 185
+	.  error
+
+
+state 185
+	stmt : IF_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD . OBRACE non_zero_stmt_list CBRACE  (41)
+
+	OBRACE  shift 186
+	.  error
+
+
+state 186
+	stmt : IF_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE . non_zero_stmt_list CBRACE  (41)
+
+	TRUE_KWORD  shift 69
+	FALSE_KWORD  shift 70
+	WHILE_KWORD  shift 71
+	IF_KWORD  shift 72
+	RETURN_KWORD  shift 73
+	THIS_KWORD  shift 74
+	SUPER_KWORD  shift 75
+	NULL_KWORD  shift 76
+	NEW_KWORD  shift 77
+	READ_KWORD  shift 78
+	PRINT_KWORD  shift 79
+	INTEGER_LITERAL  shift 80
+	STRING_LITERAL  shift 81
+	VAR_IDENTIFIER  shift 43
+	OPAREN  shift 82
+	.  error
+
+	non_zero_stmt_list  goto 187
+	var_id_rule  goto 84
+	stmt  goto 85
+	atom  goto 86
+
+
+state 187
+	stmt : IF_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list . CBRACE  (41)
+
+	CBRACE  shift 188
+	.  error
+
+
+state 188
+	stmt : IF_KWORD OPAREN exp CPAREN OBRACE non_zero_stmt_list CBRACE ELSE_KWORD OBRACE non_zero_stmt_list CBRACE .  (41)
+
+	.  reduce 41
+
+
+Rules never reduced:
+	modifier :  (10)
+	stmt_list :  (48)
+	stmt_list : non_zero_stmt_list  (49)
+	cast : OPAREN CLASS_IDENTIFIER CPAREN  (52)
+
+
+State 21 contains 11 shift/reduce conflicts.
+State 29 contains 5 shift/reduce conflicts.
+State 41 contains 5 shift/reduce conflicts.
+State 54 contains 11 shift/reduce conflicts.
+State 59 contains 5 shift/reduce conflicts.
+State 164 contains 2 shift/reduce conflicts.
+
+
+53 terminals, 29 nonterminals
+86 grammar rules, 189 states
